@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Contracts\productContract;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct(productContract $productService)
+    {
+        $this->productService = $productService;
+    }
+ 
     public function index()
     {
-        //
+        return view('admin.product.index');
+        
     }
 
     /**
@@ -24,7 +27,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.product.add');
     }
 
     /**
@@ -35,7 +38,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return $this->productService->store($request->all());
+        
     }
 
     /**
