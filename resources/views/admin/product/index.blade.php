@@ -16,7 +16,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <button type="button" class="btn btn-info float-left" data-toggle="modal"
-                                data-target="#requestModal" id="#productbutton">
+                                data-target="#product_Modal" id="productbutton">
                                 Add Product
                             </button>
                         </ol>
@@ -35,7 +35,9 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+
+        {{-- Add Model --}}
+        <div class="modal fade" id="product_Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -68,7 +70,52 @@
                             </div>
                             <div class="form-group">
                                 <div>
-                                    {{ Form::submit('submit', ['name' => 'submit', 'id' => 'submit', 'class' => 'btn btn-primary']) }}
+                                    {{ Form::submit('submit', ['name' => 'submit', 'id' => 'productbutton', 'class' => 'btn btn-primary']) }}
+                                    <a href="{{ route('admin.product.index') }}" class="btn btn-danger">
+                                        Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ Form::close() }}
+            </div>
+        </div>
+        {{-- Edit Model --}}
+        <div class="modal fade" id="product_edit_Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="mediumBody">
+                        <div>
+                            {{ Form::model($product, ['id' => 'edit_category', 'enctype' => 'multipart/form-data', 'novalidate' => true]) }}
+                            <div class="row">
+                                <div class="col-md">
+                                    {{ Form::label('Name') }}
+                                    {{ Form::text('name', null, ['placeholder' => 'Enter Name', 'class' => 'form-control', 'id' => 'name']) }}
+                                    @error('name')
+                                        <span class="text-danger" id="nameError">{{ $message }}</span>
+                                    @enderror
+                                    </br>
+                                </div>
+                                <div class="col-md">
+                                    {{ Form::label('Price') }}
+                                    {{ Form::text('price', null, ['placeholder' => 'Enter price', 'class' => 'form-control', 'id' => 'price']) }}
+                                    @error('price')
+                                        <span class="text-danger" id="priceError">{{ $message }}</span>
+                                    @enderror
+                                    </br>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    {{ Form::submit('submit', ['name' => 'submit', 'id' => 'editbutton', 'class' => 'btn btn-primary']) }}
                                     <a href="{{ route('admin.product.index') }}" class="btn btn-danger">
                                         Cancel</a>
                                 </div>
@@ -84,13 +131,23 @@
 @endsection
 @push('scripts')
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-    {{-- <script src="{{ asset('admin/assets/js/boostrap.js') }}"></script> --}}
-    {{-- <script src="{{ asset('admin/assets/js/sweetalert.min.js') }}"></script> --}}
     <script src="{{ asset('admin/dist/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('admin/dist/js/dataTables.bootstrap4.min.js') }}"></script>
     {!! $dataTable->scripts() !!}
     <script>
+         
+        $(document).on('click', '.edit_product', function(e) {
+            var id = $(this).data('id');
+             $('#product_edit_Modal').modal('show');
+            
+        });
+
+        $('#productbutton').on('click', function() {
+            $('#product_form').trigger('reset');
+            $('.form-control').removeClass('is-valid');
+        })
         $(document).ready(function() {
+
             $("#product_form").validate({
                 rules: {
                     name: {
@@ -103,7 +160,6 @@
                         maxlength: 2,
                     },
                 },
-
                 highlight: function(element, errorClass, validClass) {
                     $(element).addClass("is-invalid").removeClass("is-valid");
                 },
@@ -126,7 +182,8 @@
                         contentType: false,
                         processData: false,
                         success: function(response) {
-                            window.location = "/admin/product";
+                            $('#product_Modal').modal('hide');
+                            $('#product-table').DataTable().ajax.reload();
                         },
                         error: function(error) {
                             $.each(error.responseJSON.errors, function(key, value) {

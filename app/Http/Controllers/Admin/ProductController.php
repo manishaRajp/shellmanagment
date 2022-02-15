@@ -17,73 +17,44 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
  
-    public function index(ProductDataTable $dataTable)
+    public function index(ProductDataTable $dataTable,$id)
     {
-        return $dataTable->render('admin.product.index');  
+        $product = Product::get();
+        return $dataTable->render('admin.product.index', compact('product'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function create()
     {
         return view('admin.product.add');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+  
     public function store(storeRequest $request)
     {
-        return $this->productService->store($request->all());
-        
+        return $this->productService->store($request->all()); 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+   
+    public function edit(ProductDataTable $dataTable,$id)
     {
-        //
+        $product = Product::find( $id);
+        return $dataTable->render('admin.product.index', compact('product'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(updateRequest $request, $id)
     {
-        //
+        return $this->productService->store($request->all()); 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+  
     public function destroy($id)
     {
         //

@@ -16,12 +16,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('dashboard', function () {
-//     return view('admin.dashboard.index');
-// });
-// Route::get('login', function () {
-//     return view('admin.dashboard.login');
-// });
 
 
 // Admin Login //
@@ -33,13 +27,15 @@ Route::group(['namespace' => 'Auth'], function () {
 
 
 // Admin Dashboard //
- Route::group(['middleware' => 'auth:admin'], function () {
-    Route::get('dashboard', [DashboardController::class, 'view'])->name('dashboard');
-    Route::get('/profile', [DashboardController::class, 'profileview'])->name('profile_view');
-    Route::post('/profile-update', [DashboardController::class, 'profileupdate'])->name('profile_update');
+Route::group(['middleware' => 'auth:admin'], function () {
+Route::get('dashboard', [DashboardController::class, 'view'])->name('dashboard');
+Route::get('/profile', [DashboardController::class, 'profileview'])->name('profile_view');
+Route::post('/profile-update', [DashboardController::class, 'profileupdate'])->name('profile_update');
 
 
 // Product Module //
 Route::resource('product',ProductController::class);
-
+Route::post('product-index', [ProductController::class, 'index'])->name('index_product');
+Route::post('product-update', [ProductController::class, 'update'])->name('update_product');
+Route::get('product-delete', [ProductController::class, 'destroy'])->name('delete_product');
  });

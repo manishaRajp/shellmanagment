@@ -21,7 +21,15 @@ class ProductDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'product.action');
+            ->addColumn('action', function ($data) {
+                return
+                    '<button type="button"  data-id= "' . $data->id . '"class="btn btn-outline-danger"><i class="fa fa-trash"></i></button>
+                    <button type="button"  data-id= "' . $data->id . '"class="btn btn-outline-info edit_product"><i class="fa fa-pen"></i></button>
+                    ';
+            })
+
+            ->rawColumns(['action'])
+            ->addIndexColumn();
     }
 
     /**
@@ -65,9 +73,10 @@ class ProductDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id'),
-            Column::make('name'),
-            Column::make('price'),
+            Column::make('id')->data('DT_RowIndex')->orderable(false)->title('Sr.no'),
+            Column::make('name')->title('Name'),
+            Column::make('price')->title('Price'),
+            Column::make('action')->title('Action'),
         ];
     }
 
