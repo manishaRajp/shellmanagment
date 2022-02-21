@@ -27,7 +27,6 @@ class ProductDataTable extends DataTable
                     <button type="button"  data-id= "' . $data->id . '"class="btn btn-outline-info edit_product"><i class="fa fa-pen"></i></button>
                     ';
             })
-
             ->rawColumns(['action'])
             ->addIndexColumn();
     }

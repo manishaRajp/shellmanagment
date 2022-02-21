@@ -138,7 +138,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     {!! $dataTable->scripts() !!}
     <script>
-// Insert 
+        // Insert 
         $('#productbutton').on('click', function() {
             $('#product_form').trigger('reset');
             $('.form-control').removeClass('is-valid');
@@ -193,7 +193,7 @@
             });
         });
 
-// fetch Data 
+        // fetch Data 
         $(document).on('click', '.edit_product', function() {
             var id = $(this).attr('data-id');
             $('#product_edit_Modal').modal('show');
@@ -223,22 +223,58 @@
                 pname: {
                     required: true,
                     string: true
-                }
-                p_price: {
+                },
+                price: {
                     required: true,
-                }
+                    digits: true,
+                    maxlength: 2
+                },
             },
 
             messages: {
                 pname: {
                     required: "Product name is required",
-                }
-               
+                },
+                price: {
+                    required: "Product price is required",
+                },
             },
-           
+            submitHandler: function(form) {
+                $('.server-error').remove();
+                error.insertAfter($(element));
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    },
+                    url: admin/product-update,
+                    method: "POST",
+                    data: new FormData(form),
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: 'JSON',
+                    success: function(data) {
+                        alert(data);
+                        if (data.status == true) {
+                            swal("Done!", data.message, "success");
+                            $('#edit_product').get(0).reset();
+                            $("#product_edit_Modal").modal('hide');
+                            window.LaravelDataTables["product-table"].draw();
+                        }
+                    },
+                    error: function(response) {
+                        $(document).find('.server-error').remove();
+                        $.each(response.responseJSON.errors, function(field_name, error) {
+                            $('[name=' + field_name + ']').append(
+                                '<span class="server-error text-strong" style="color:red">' +
+                                error + '</span>')
+                        })
+                    }
+                });
+            }
         });
 
-// delete 
+        // delete 
         $(document).on('click', '.delete_product', function() {
             var id = $(this).data('id');
             swal({
