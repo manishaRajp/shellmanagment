@@ -23,7 +23,7 @@ class ProductDataTable extends DataTable
             ->eloquent($query)
             ->addColumn('action', function ($data) {
                 return
-                    '<button type="button"  data-id= "' . $data->id . '"class="btn btn-outline-danger"><i class="fa fa-trash"></i></button>
+                    '<button type="button"  data-id= "' . $data->id . '"class="btn btn-outline-danger delete_product"><i class="fa fa-trash"></i></button>
                     <button type="button"  data-id= "' . $data->id . '"class="btn btn-outline-info edit_product"><i class="fa fa-pen"></i></button>
                     ';
             })

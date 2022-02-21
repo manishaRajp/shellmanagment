@@ -17,10 +17,10 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
  
-    public function index(ProductDataTable $dataTable,$id)
+    public function index(ProductDataTable $dataTable)
     {
-        $product = Product::get();
-        return $dataTable->render('admin.product.index', compact('product'));
+        $productedit = Product::get();
+        return $dataTable->render('admin.product.index', compact('productedit'));
     }
 
     
@@ -41,22 +41,26 @@ class ProductController extends Controller
         //
     }
 
+  
+
+     public function edit(ProductDataTable $dataTable,Request $request)
+     {
+        $productedit  = Product::find($request->id);
+        return response()->json(['data'=>$productedit]);
+     }
+
    
-    public function edit(ProductDataTable $dataTable,$id)
-    {
-        $product = Product::find( $id);
-        return $dataTable->render('admin.product.index', compact('product'));
-    }
 
     
-    public function update(updateRequest $request, $id)
+    public function update(Request $request)
     {
         return $this->productService->store($request->all()); 
     }
 
   
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $delete = Product::where('id', $request->id)->delete();
+        return response()->json(['data' => $delete]);
     }
 }

@@ -94,21 +94,21 @@
                     </div>
                     <div class="modal-body" id="mediumBody">
                         <div>
-                            {{ Form::model($product, ['id' => 'edit_category', 'enctype' => 'multipart/form-data', 'novalidate' => true]) }}
+                            {{ Form::model($productedit, ['id' => 'edit_product','enctype' => 'multipart/form-data','novalidate' => true]) }}
                             <div class="row">
                                 <div class="col-md">
                                     {{ Form::label('Name') }}
-                                    {{ Form::text('name', null, ['placeholder' => 'Enter Name', 'class' => 'form-control', 'id' => 'name']) }}
-                                    @error('name')
+                                    {{ Form::text('pname', null, ['placeholder' => 'Enter Name', 'class' => 'form-control', 'id' => 'pname']) }}
+                                    @error('pname')
                                         <span class="text-danger" id="nameError">{{ $message }}</span>
                                     @enderror
                                     </br>
                                 </div>
                                 <div class="col-md">
                                     {{ Form::label('Price') }}
-                                    {{ Form::text('price', null, ['placeholder' => 'Enter price', 'class' => 'form-control', 'id' => 'price']) }}
-                                    @error('price')
-                                        <span class="text-danger" id="priceError">{{ $message }}</span>
+                                    {{ Form::text('p_price', null, ['placeholder' => 'Enter price', 'class' => 'form-control', 'id' => 'p_price']) }}
+                                    @error('p_price')
+                                        <span class="text-danger" id="p_priceError">{{ $message }}</span>
                                     @enderror
                                     </br>
                                 </div>
@@ -133,28 +133,24 @@
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
     <script src="{{ asset('admin/dist/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('admin/dist/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     {!! $dataTable->scripts() !!}
     <script>
-         
-        $(document).on('click', '.edit_product', function(e) {
-            var id = $(this).data('id');
-             $('#product_edit_Modal').modal('show');
-            
-        });
-
+// Insert 
         $('#productbutton').on('click', function() {
             $('#product_form').trigger('reset');
             $('.form-control').removeClass('is-valid');
         })
         $(document).ready(function() {
-
             $("#product_form").validate({
                 rules: {
                     name: {
                         required: true,
                         maxlength: 225,
                     },
-                    price: {
+                    p_price: {
                         required: true,
                         digits: true,
                         maxlength: 2,
@@ -193,6 +189,82 @@
                             });
                         }
                     });
+                }
+            });
+        });
+
+// fetch Data 
+        $(document).on('click', '.edit_product', function() {
+            var id = $(this).attr('data-id');
+            $('#product_edit_Modal').modal('show');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                method: "get",
+                url: "{{ route('admin.edit_product') }}",
+                data: {
+                    id: id,
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    console.log(response.data.price);
+                    $('#pname').val(response.data.name);
+                    $('#p_price').val(response.data.price);
+                }
+            });
+
+        });
+
+// update
+
+        $('#edit_product').validate({
+            rules: {
+                pname: {
+                    required: true,
+                    string: true
+                }
+                p_price: {
+                    required: true,
+                }
+            },
+
+            messages: {
+                pname: {
+                    required: "Product name is required",
+                }
+               
+            },
+           
+        });
+
+// delete 
+        $(document).on('click', '.delete_product', function() {
+            var id = $(this).data('id');
+            swal({
+                title: "Do u want to delete Records !",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: "{{ route('admin.delete_product') }}",
+                        type: "get",
+                        data: {
+                            id: id,
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data) {
+                                swal("Deleted !", "Your Records are deleted.",
+                                    "success");
+                                window.LaravelDataTables["product-table"].draw();
+                            }
+                        }
+                    });
+                } else {
+                    swal("Cancelled", "Your Recoder is safe :)", "error");
                 }
             });
         });
