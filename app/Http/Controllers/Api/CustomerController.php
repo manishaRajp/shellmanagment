@@ -44,10 +44,16 @@ class CustomerController extends BaseController
     {
         $order = new order();
         $order->user_id = Auth::user()->id;
-        $order->product_id = $request->product_id;
         $order->save();
         
-        $orderdetails = new OrderDetails;
+
+        $orderid = order::select('id')->where('user_id',Auth::user()->id)->get();
+        dd($orderid);
+        $p_ids = explode(',', $request->product_id);
+        foreach ($p_ids as $key => $p_id) {
+            $orderdetails = new OrderDetails;
+            
+        }
         
     }
 

@@ -15,7 +15,8 @@ class CreateOrderdetailsTable extends Migration
     {
         Schema::create('orderdetails', function (Blueprint $table) {
             $table->id();
-            $table->string('order_id')->nullable()->comment('order_id of order table');
+            $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->string('product')->nullable()->comment('Taken By user');
             $table->string('quentity')->nullable()->comment('number of product');
             $table->string('price')->comment('Price of product over all');
