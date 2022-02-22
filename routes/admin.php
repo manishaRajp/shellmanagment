@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\Order;
+use App\Http\Controllers\Admin\OrderDetails;
 use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +38,15 @@ Route::post('/profile-update', [DashboardController::class, 'profileupdate'])->n
 // Product Module //
 Route::resource('product',ProductController::class);
 Route::post('product-index', [ProductController::class, 'index'])->name('index_product');
-Route::get('product-edit', [ProductController::class, 'edit'])->name('edit_product');
+// Route::get('product-edit', [ProductController::class, 'edit'])->name('edit_product');
 Route::post('product-update', [ProductController::class, 'update'])->name('update_product');
 Route::get('product-delete', [ProductController::class, 'destroy'])->name('delete_product');
+
+
+
+// order Module 
+Route::resource('order',Order::class);
+
+// order-details Module 
+Route::resource('order-details',OrderDetails::class);
  });

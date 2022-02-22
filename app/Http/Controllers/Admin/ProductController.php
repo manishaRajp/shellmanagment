@@ -43,18 +43,15 @@ class ProductController extends Controller
 
   
 
-     public function edit(ProductDataTable $dataTable,Request $request)
+     public function edit(Request $request,$id)
      {
         $productedit  = Product::find($request->id);
         return response()->json(['data'=>$productedit]);
      }
 
-   
-
-    
     public function update(Request $request)
     {
-        return $this->productService->store($request->all()); 
+        return $this->productService->update($request->all()); 
     }
 
   

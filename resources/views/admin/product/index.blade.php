@@ -6,6 +6,7 @@
         }
 
     </style>
+
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
@@ -68,10 +69,19 @@
                                     </br>
                                 </div>
                             </div>
+                            <div class="col-md">
+                                {{ Form::label('Product Image') }}
+                                {{ Form::file('image', ['class' => 'form-control', 'id' => 'image']) }}
+                                @error('image')
+                                    <span class="text-danger" id="imageError">{{ $message }}</span>
+                                @enderror
+                                </br>
+                            </div>
                             <div class="form-group">
                                 <div>
                                     {{ Form::submit('submit', ['name' => 'submit', 'id' => 'productbutton', 'class' => 'btn btn-primary']) }}
-                                    <a href="{{ route('admin.product.index') }}" class="btn btn-danger">
+                                    <a href="{{ route('admin.product.index') }}" class="btn btn-danger"
+                                        id="cancle_button">
                                         Cancel</a>
                                 </div>
                             </div>
@@ -94,11 +104,12 @@
                     </div>
                     <div class="modal-body" id="mediumBody">
                         <div>
-                            {{ Form::model($productedit, ['id' => 'edit_product','enctype' => 'multipart/form-data','novalidate' => true]) }}
+                            {{ Form::model($productedit, ['id' => 'edit_product']) }}
+                            {{ Form::hidden('id', null, ['class' => 'form-control ids']) }}
                             <div class="row">
                                 <div class="col-md">
                                     {{ Form::label('Name') }}
-                                    {{ Form::text('pname', null, ['placeholder' => 'Enter Name', 'class' => 'form-control', 'id' => 'pname']) }}
+                                    {{ Form::text('name', null, ['placeholder' => 'Enter Name', 'class' => 'form-control', 'id' => 'pname']) }}
                                     @error('pname')
                                         <span class="text-danger" id="nameError">{{ $message }}</span>
                                     @enderror
@@ -106,12 +117,20 @@
                                 </div>
                                 <div class="col-md">
                                     {{ Form::label('Price') }}
-                                    {{ Form::text('p_price', null, ['placeholder' => 'Enter price', 'class' => 'form-control', 'id' => 'p_price']) }}
+                                    {{ Form::text('price', null, ['placeholder' => 'Enter price', 'class' => 'form-control', 'id' => 'p_price']) }}
                                     @error('p_price')
                                         <span class="text-danger" id="p_priceError">{{ $message }}</span>
                                     @enderror
                                     </br>
                                 </div>
+                            </div>
+                            <div class="col-md">
+                                {{ Form::label('Profile Image') }}
+                                {{ Form::file('image', ['class' => 'form-control', 'id' => 'image']) }}
+                                @error('image')
+                                    <span class="text-danger" id="imageError">{{ $message }}</span>
+                                @enderror
+                                </br>
                             </div>
                             <div class="form-group">
                                 <div>
@@ -139,6 +158,10 @@
     {!! $dataTable->scripts() !!}
     <script>
         // Insert 
+        $('#cancle_button').click(function(e) {
+            e.preventDefault();
+            $('#product_Modal').modal('hide');
+        });
         $('#productbutton').on('click', function() {
             $('#product_form').trigger('reset');
             $('.form-control').removeClass('is-valid');
@@ -148,12 +171,12 @@
                 rules: {
                     name: {
                         required: true,
-                        maxlength: 225,
+                        maxlength: 225
                     },
                     p_price: {
                         required: true,
                         digits: true,
-                        maxlength: 2,
+                        maxlength: 2
                     },
                 },
                 highlight: function(element, errorClass, validClass) {
@@ -196,82 +219,76 @@
         // fetch Data 
         $(document).on('click', '.edit_product', function() {
             var id = $(this).attr('data-id');
+            console.log(id);
             $('#product_edit_Modal').modal('show');
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 method: "get",
-                url: "{{ route('admin.edit_product') }}",
+                url: "{{ route('admin.product.edit',"id") }}",
                 data: {
                     id: id,
                 },
                 dataType: "JSON",
                 success: function(response) {
-                    console.log(response.data.price);
+                    console.log(response.data.name);
+                    $('.ids').val(response.data.id);
                     $('#pname').val(response.data.name);
                     $('#p_price').val(response.data.price);
+                    $('#image').val(response.data.image);
                 }
             });
 
         });
-
 // update
-
-        $('#edit_product').validate({
-            rules: {
-                pname: {
-                    required: true,
-                    string: true
-                },
-                price: {
-                    required: true,
-                    digits: true,
-                    maxlength: 2
-                },
-            },
-
-            messages: {
-                pname: {
-                    required: "Product name is required",
-                },
-                price: {
-                    required: "Product price is required",
-                },
-            },
-            submitHandler: function(form) {
-                $('.server-error').remove();
-                error.insertAfter($(element));
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        $(document).ready(function() {
+            $("#edit_product").validate({
+                rules: {
+                    pname: {
+                        required: true,
+                        maxlength: 225
                     },
-                    url: admin/product-update,
-                    method: "POST",
-                    data: new FormData(form),
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    dataType: 'JSON',
-                    success: function(data) {
-                        alert(data);
-                        if (data.status == true) {
-                            swal("Done!", data.message, "success");
-                            $('#edit_product').get(0).reset();
-                            $("#product_edit_Modal").modal('hide');
-                            window.LaravelDataTables["product-table"].draw();
+                    p_price: {
+                        required: true,
+                        digits: true,
+                        maxlength: 4
+                    },
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass("is-invalid").removeClass("is-valid");
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).addClass("is-valid").removeClass("is-invalid");
+                },
+                submitHandler: function(form, event) {
+                    event.preventDefault();
+                    $(document).find('.text-danger').remove();
+                    var formdata = new FormData(form);
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: "post",
+                        url: "{{ route('admin.update_product') }}",
+                        data: formdata,
+                        dataType: 'JSON',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            console.log(response);
+                            $('#product_edit_Modal').modal('hide');
+                            $('#product-table').DataTable().ajax.reload();
+                        },
+                        error: function(error) {
+                            $.each(error.responseJSON.errors, function(key, value) {
+                                $('#' + key).after('<span class="text-danger">' + value +'</span>')
+                            });
                         }
-                    },
-                    error: function(response) {
-                        $(document).find('.server-error').remove();
-                        $.each(response.responseJSON.errors, function(field_name, error) {
-                            $('[name=' + field_name + ']').append(
-                                '<span class="server-error text-strong" style="color:red">' +
-                                error + '</span>')
-                        })
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
 
         // delete 

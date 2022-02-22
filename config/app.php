@@ -177,6 +177,8 @@ return [
         App\Providers\RepositoryServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
+        App\Providers\RepositoryServiceProvider::class
 
     ],
 
@@ -233,6 +235,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+
 
 
     ],

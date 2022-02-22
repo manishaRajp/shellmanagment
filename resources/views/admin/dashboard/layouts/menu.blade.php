@@ -38,22 +38,23 @@
                           </p>
                       </a>
                   </li>
-                  <li class="nav-item">
-                      <a href="pages/kanban.html" class="nav-link">
-                          <i class="nav-icon fas fa-book"></i>
-                          <p>
-                             Order Details
-                          </p>
-                      </a>
-                  </li>
-                  <li class="nav-item">
-                      <a href="pages/kanban.html" class="nav-link">
+                     <li class="nav-item">
+                      <a href="{{ route('admin.order.index')}}" class="nav-link">
                           <i class="nav-icon fas fa-book"></i>
                           <p>
                              Order
                           </p>
                       </a>
                   </li>
+                  <li class="nav-item">
+                      <a href="{{ route('admin.order-details.index')}}" class="nav-link">
+                          <i class="nav-icon fas fa-book"></i>
+                          <p>
+                             Order Details
+                          </p>
+                      </a>
+                  </li>
+               
                   {{-- <li class="nav-item">
                       <a href="pages/kanban.html" class="nav-link">
                           <i class="nav-icon fas fa-columns"></i>

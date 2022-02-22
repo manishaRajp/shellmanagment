@@ -16,14 +16,27 @@ class productRepository implements productContract
 
     public function store(array $request)
     {
-        Product::create($request);
+        $image = uploadFile($request['image'], 'ProductImage');
+        $input = $request;
+        $input['image'] = $image;
+        Product::create($input);
         return response()->json(["statusCode" => 200]);
     }
     public function update(array $request)
     {
+
         $product = Product::find($request['id']);
-        $product->update($request);
+        if (isset($request['image'])) {
+            $image = uploadFile($request['image'], 'ProductImage');
+        } else {
+            $image = $product->getRawOriginal('image');
+        }
+        $input = $request;
+        $input['image'] = $image;
+        $product->update($input);
         return response()->json(['success' => 'Product updated successfully']);
+        
+    
     }
    
 }
