@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\OrderDetail;
+use App\Models\OrderDetails;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -21,7 +22,17 @@ class OrderDetailsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'orderdetails.action');
+            ->addColumn('action', function ($data) {
+                return
+                    '
+                     <br><a href="' . route("admin.order-details.show", $data->id) . '"class="btn btn-outline-info"><i class="fa fa-eye"></i></a>
+                    ';
+            })
+            ->editColumn('product_id', function ($data) {
+                return $data->product->name;
+            })
+            ->rawColumns(['action','product_id'])
+            ->addIndexColumn();
     }
 
     /**
@@ -65,12 +76,15 @@ class OrderDetailsDataTable extends DataTable
     protected function getColumns()
     {
         return [
-           
-            Column::make('id'),
+
+            Column::make('id')->data('DT_RowIndex')->orderable(false)->title('Sr.no'),
             Column::make('order_id'),
-            Column::make('product'),
-            Column::make('quentity'),
+            Column::make('product_id'),
+            // Column::make('quantity'),
             Column::make('price'),
+            // Column::make('total_price'),
+            // Column::make('discount_price'),
+            Column::make('action'),
           
         ];
     }

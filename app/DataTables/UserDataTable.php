@@ -2,14 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\Order;
+use App\Models\User;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class OrderDataTable extends DataTable
+class UserDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -21,20 +21,16 @@ class OrderDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->editColumn('user_id', function ($data) {
-                return $data->user->name;
-            })
-            ->rawColumns(['user_id'])
-            ->addIndexColumn();
+            ->addColumn('action', 'user.action');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Order $model
+     * @param \App\Models\User $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Order $model)
+    public function query(User $model)
     {
         return $model->newQuery();
     }
@@ -47,7 +43,7 @@ class OrderDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('order-table')
+                    ->setTableId('user-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')
@@ -69,11 +65,15 @@ class OrderDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id')->data('DT_RowIndex')->orderable(false)->title('Sr.no'),
-            Column::make('user_id'),
-            Column::make('amount'),
-            Column::make('discount_ammount'),
-            Column::make('discount_parsent'),
+            Column::computed('action')
+                  ->exportable(false)
+                  ->printable(false)
+                  ->width(60)
+                  ->addClass('text-center'),
+            Column::make('id'),
+            Column::make('name'),
+            Column::make('email'),
+          
         ];
     }
 
@@ -84,6 +84,6 @@ class OrderDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Order_' . date('YmdHis');
+        return 'User_' . date('YmdHis');
     }
 }

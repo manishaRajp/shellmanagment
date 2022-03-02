@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('name')->nullable();
             $table->string('price')->nullable();
             $table->string('image')->nullable();
+            $table->enum('status', ['0', '1'])->default(0)->comment('0 = available, 1 = not available');
             $table->timestamps();
         });
     }

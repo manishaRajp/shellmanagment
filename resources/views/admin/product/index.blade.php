@@ -219,7 +219,6 @@
         // fetch Data 
         $(document).on('click', '.edit_product', function() {
             var id = $(this).attr('data-id');
-            console.log(id);
             $('#product_edit_Modal').modal('show');
             $.ajax({
                 headers: {
@@ -232,7 +231,7 @@
                 },
                 dataType: "JSON",
                 success: function(response) {
-                    console.log(response.data.name);
+                    console.log(response.data);
                     $('.ids').val(response.data.id);
                     $('#pname').val(response.data.name);
                     $('#p_price').val(response.data.price);

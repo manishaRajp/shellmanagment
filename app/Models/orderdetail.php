@@ -5,23 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class orderdetail extends Model
+class OrderDetail extends Model
 {
     use HasFactory;
 
-    protected $table = 'orderdetails';
-    protected $fillable = [
-        'id',
+    protected $fillable =
+    [
         'order_id',
-        'product',
-        'quentity',
-        'price'
+        'product_id',
+        'quantity',
+        'price',
+        'total_price',
+        'discount_price',
     ];
 
-
-    protected $casts = [
-        'order_id' => 'array',
-        'product' => 'array'
-    ];
-
+    public function product()
+    {
+        return $this->hasOne(Product::class,'id','product_id');
+    }
 }

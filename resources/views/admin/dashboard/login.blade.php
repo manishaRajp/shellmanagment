@@ -60,6 +60,7 @@
                     rules: {
                         email: {
                             required: true,
+                            
                         },
                         password: {
                             required: true,

@@ -3,8 +3,10 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\Order;
-use App\Http\Controllers\Admin\OrderDetails;
+use App\Http\Controllers\Admin\OrderDetailsController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,5 +50,9 @@ Route::get('product-delete', [ProductController::class, 'destroy'])->name('delet
 Route::resource('order',Order::class);
 
 // order-details Module 
-Route::resource('order-details',OrderDetails::class);
+Route::resource('order-details',OrderDetailsController::class);
+
+
+// User Module 
+Route::resource('user',UserController::class);
  });

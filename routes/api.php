@@ -27,5 +27,4 @@ Route::post('custm-login', [CustomerController::class, 'Login']);
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('order-placed', [CustomerController::class, 'order']);
-    Route::get('order-details', [CustomerController::class, 'OrderDetails']);
 });

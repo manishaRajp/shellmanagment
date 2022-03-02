@@ -4,23 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class order extends Model
+class Order extends Model
 {
     use HasFactory;
 
-    protected $table = 'orders';
     protected $fillable = [
         'id',
         'user_id',
-        'product_id',
+        'amount',
+        'discount_ammount',
+        'discount_parsent',
     ];
 
-
-     public function product()
+    public function user()
     {
-        return $this->hasMany(Product::class,'id', 'product_id');
+        return $this->hasOne(User::class,'id','user_id');
     }
-
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
+   
 }

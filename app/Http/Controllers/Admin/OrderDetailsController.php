@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\DataTables\OrderDetailsDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class OrderDetails extends Controller
+class OrderDetailsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +17,9 @@ class OrderDetails extends Controller
      */
     public function index(OrderDetailsDataTable $dataTable)
     {
-        return $dataTable->render('admin.orderdetails.index');
+
+        $productShow = OrderDetail::get();
+        return $dataTable->render('admin.orderdetails.index', compact('productShow'));
     }
 
     /**
@@ -47,15 +51,11 @@ class OrderDetails extends Controller
      */
     public function show($id)
     {
-        //
+        $order_show  = OrderDetail::find($id);
+      
+        return view('admin.orderdetails.show', compact('order_show'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
